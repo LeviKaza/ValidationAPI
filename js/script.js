@@ -21,7 +21,6 @@ function search (i, el, url) {
         if (data.data.length != 0) {
             console.log(url);
             url = data.pagination.next_url;
-            // debugger
             search(i, el, url);
         }
     })
