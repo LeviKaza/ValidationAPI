@@ -12,16 +12,47 @@ fetch('https://api.artic.edu/api/v1/artworks')
     })
 })
 
-function search (i, el, url) {
+var j = 1
+function search (el, url) {
     fetch(url)
     .then((response) => {
         return response.json();
     })
     .then((data) => {
         if (data.data.length != 0) {
+            var images = data.data;
             console.log(url);
+            images.forEach(image => {
+                if (image.artist_title === el.value) {
+                    test = image.image_id;
+                    fetch('https://www.artic.edu/iiif/2/' + test + '/full/843,/0/default.jpg')
+                    .then((response) => {
+                        var div = document.createElement('figure');
+                        var p = document.createElement('figcaption');
+                        var img = document.createElement('img');
+                        p.setAttribute('class', 'info' + j);
+                        img.setAttribute('src', response.url);
+                        div.append(img);
+                        div.append(p);
+                        document.querySelector('.pictures').append(div);
+                        if(image.artist_title != null) {
+                            document.querySelector('.info' + j).append('Auteur : ');
+                            document.querySelector('.info' + j).append(image.artist_title);
+                        }else {
+                            document.querySelector('.info' + j).append('Auteur : ');
+                            document.querySelector('.info' + j).append('Inconnu');
+                        }
+                        document.querySelector('.info' + j).append("\nTitre : " + image.title);
+                        document.querySelector('.info' + j).append("\nMatériaux : " + image.medium_display);
+                        document.querySelector('.info' + j).append("\nDate : " + image.date_display);
+                        document.querySelector('.info' + j).append("\nPeriode : " + image.category_titles);
+                        j++
+                    })
+                }
+            })
             url = data.pagination.next_url;
-            search(i, el, url);
+            // debugger
+            search(el, url);
         }
     })
 }
@@ -37,9 +68,9 @@ document.querySelector('.pictures').addEventListener("click", (el) => {
             })
             .then((data) => {
                 var url = data.pagination.next_url
-                images = data.data;
+                var images = data.data;
                 if (document.querySelector('figure')){
-                    document.querySelector('figure').remove();
+                    
                 }
                 images.forEach(image => {
                     if (image.artist_title === el.value) {
@@ -66,9 +97,9 @@ document.querySelector('.pictures').addEventListener("click", (el) => {
                             document.querySelector('.info' + i).append("\nDate : " + image.date_display);
                             document.querySelector('.info' + i).append("\nPeriode : " + image.category_titles);
                         })
-                    search(i, el, url);
                     }
                 })
+                search(el, url);
             })
         }
     }
