@@ -70,7 +70,10 @@ document.querySelector('.pictures').addEventListener("click", (el) => {
                 var url = data.pagination.next_url
                 var images = data.data;
                 if (document.querySelector('figure')){
-                    
+                    var x = document.querySelectorAll('figure');
+                    for (k = 0; k < x.length; k++) {
+                        document.querySelector('figure').remove();
+                    }
                 }
                 images.forEach(image => {
                     if (image.artist_title === el.value) {
