@@ -38,6 +38,9 @@ document.querySelector('.pictures').addEventListener("click", (el) => {
             .then((data) => {
                 var url = data.pagination.next_url
                 images = data.data;
+                if (document.querySelector('figure')){
+                    document.querySelector('figure').remove();
+                }
                 images.forEach(image => {
                     if (image.artist_title === el.value) {
                         test = image.image_id;
